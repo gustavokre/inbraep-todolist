@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use \App\Http\Controllers\TarefasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,13 +15,3 @@ use \App\Http\Controllers\TarefasController;
 
 Route::view('{any}', 'welcome')->where('any', '.*');
 
-Route::prefix('api')->group(function () {
-
-
-    Route::post('/tarefas-get', [TarefasController::class, 'getTarefas']);
-    Route::post('/tarefas-progresso-get', [TarefasController::class, 'getTarefasProgresso']);
-    Route::post('/tarefas-prioridade-get', [TarefasController::class, 'getTarefasPrioridade']);
-
-
-
-});
