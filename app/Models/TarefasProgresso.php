@@ -18,4 +18,8 @@ class TarefasProgresso extends Model
         'ds_color_hex',
         'ordem',
     ];
+
+    public function tarefas(){
+        return $this->hasMany(Tarefas::class, 'cd_tarefa_progresso','id')->with('prioridade');
+    }
 }
