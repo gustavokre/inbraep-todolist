@@ -10,12 +10,24 @@ use App\Models\TarefasProgresso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class TarefasController extends Controller
 {
     public function salvarMensagem(Request $request){
 
         try {
+
+            $validator = Validator::make($request->all(),
+                [
+                    'ds_mensagem' => 'required|string',
+                    'cd_pessoa' => 'required|integer',
+                ]
+            );
+
+            if($validator->fails()){
+                return response()->json(["errors" => ["Favor preencher corretamente os campos"]], 400);
+            }
 
             $mensagem = new TarefasMensagem($request->all());
             $mensagem->save();
@@ -24,7 +36,7 @@ class TarefasController extends Controller
 
         } catch (\Throwable $e) {
             log::error($e->getMessage());
-            return response()->json(["errors" => [$e->getMessage()]], 500);
+            return response()->json(["errors" => ["Não foi possível salvar sua mensagem"]], 500);
         }
 
     }
@@ -79,16 +91,32 @@ class TarefasController extends Controller
     public function store(Request $request){
         try {
 
+            $validator = Validator::make($request->all(),
+                [
+                    'cd_tarefa_progresso' => 'required|integer',
+                    'cd_tarefa_prioridade' => 'required|integer',
+                    'cd_pessoa_requerente' => 'required|integer',
+                    'ds_titulo' => 'required'
+                ]
+            );
+
+            if($validator->fails()){
+                return response()->json(["errors" => ["Favor preencher corretamente os campos"]], 400);
+            }
+
             DB::beginTransaction();
 
             $tarefa = new Tarefas($request->all());
             $tarefa->save();
 
-            $mensagem = new TarefasMensagem();
-            $mensagem->cd_pessoa = $request->cd_pessoa_requerente;
-            $mensagem->ds_mensagem = $request->ds_mensagem;
-            $mensagem->cd_tarefa = $tarefa->id;
-            $mensagem->save();
+            if(!empty($request->ds_mensagem)){
+                $mensagem = new TarefasMensagem();
+                $mensagem->cd_pessoa = $request->cd_pessoa_requerente;
+                $mensagem->ds_mensagem = $request->ds_mensagem;
+                $mensagem->cd_tarefa = $tarefa->id;
+                $mensagem->save();
+            }
+
 
             DB::commit();
 
@@ -96,7 +124,7 @@ class TarefasController extends Controller
 
             log::error($e->getMessage());
             DB::rollBack();
-            return response()->json(["errors" => ["Não foi possível excluir esta tarefa"]], 500);
+            return response()->json(["errors" => ["Não foi possível criar a tarefa"]], 500);
         }
     }
 
@@ -108,7 +136,7 @@ class TarefasController extends Controller
         } catch (\Throwable $e) {
 
             log::error($e->getMessage());
-            return response()->json(["errors" => ["Não foi possível excluir esta tarefa"]], 500);
+            return response()->json(["errors" => ["Não foi possível atualizar esta tarefa"]], 500);
         }
     }
 

@@ -25,7 +25,7 @@ Route::post('/tarefas-prioridade-get', [TarefasController::class, 'getTarefasPri
 Route::post('/pessoas-get', [TarefasController::class, 'getPessoas']);
 
 Route::post('/mensagem/{id}', [TarefasController::class, 'getMensagem']);
-Route::post('/mensagem/salvar', [TarefasController::class, 'salvarMensagem']);
+Route::post('/mensagem-salvar', [TarefasController::class, 'salvarMensagem']);
 
 //CRUD, pegar tarefa unica / criar nova tarefa / deletar tarefa
 Route::apiResource('tarefas', TarefasController::class);

@@ -58,24 +58,16 @@
 
 <script>
 import { DxSelectBox, DxTextBox, DxButton, DxTextArea} from 'devextreme-vue';
-import axios from "axios";
 
 export default {
     name: "modalTarefa",
 
     components: { DxSelectBox, DxTextBox, DxButton, DxTextArea},
 
-    computed:{
-        convertDate: function (data) {
-            let resultData = new Date(data);
-            return resultData.toLocaleString();
-        }
-    },
-
     methods:{
 
         salvarMensagem(){
-            axios.post('api/mensagem/salvar', this.form)
+            axios.post('api/mensagem-salvar', this.form)
             .then(res => {
                 this.sucessoMensagem(res.data.message);
                 //para recarregar as mensagens
@@ -204,7 +196,7 @@ export default {
 }
 
 .balao-mensagem{
-    padding: 5px;
+    padding: 5px 10px;
     display: flex;
     align-items: center;
     flex-direction: column;
